@@ -7,6 +7,21 @@ export function getApiBaseUrl() {
     return `https://${codespaceName}-${DEFAULT_PORT}.app.github.dev/api`;
   }
 
+  if (typeof window !== 'undefined') {
+    const { hostname } = window.location;
+
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+      return `http://localhost:${DEFAULT_PORT}/api`;
+    }
+
+    const codespacesHostMatch = hostname.match(/^([a-z0-9-]+)-(\d+)\.app\.github\.dev$/i);
+
+    if (codespacesHostMatch) {
+      const currentCodespaceName = codespacesHostMatch[1];
+      return `https://${currentCodespaceName}-${DEFAULT_PORT}.app.github.dev/api`;
+    }
+  }
+
   return `http://localhost:${DEFAULT_PORT}/api`;
 }
 
