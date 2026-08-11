@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
-import { fetchCollection, getCollectionUrl } from '../lib/api';
+import { fetchFromEndpoint, getCollectionUrl } from '../lib/api';
+
+const teamsEndpoint = import.meta.env.VITE_CODESPACE_NAME
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/teams/`
+  : getCollectionUrl('teams');
 
 function Teams() {
   const [state, setState] = useState({
@@ -13,7 +17,7 @@ function Teams() {
   useEffect(() => {
     let active = true;
 
-    fetchCollection('teams')
+    fetchFromEndpoint(teamsEndpoint)
       .then((result) => {
         if (!active) {
           return;
@@ -41,7 +45,7 @@ function Teams() {
   return (
     <section>
       <h2>Teams</h2>
-      <p className="text-secondary">Endpoint: {getCollectionUrl('teams')}</p>
+      <p className="text-secondary">Endpoint: {teamsEndpoint}</p>
       {state.loading && <p>Loading teams...</p>}
       {state.error && <p className="text-danger">{state.error}</p>}
       {!state.loading && !state.error && (

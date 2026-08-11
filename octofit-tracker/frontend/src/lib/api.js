@@ -83,3 +83,14 @@ export async function fetchCollection(collectionName) {
   const payload = await response.json();
   return normalizeCollectionResponse(payload);
 }
+
+export async function fetchFromEndpoint(endpoint) {
+  const response = await fetch(endpoint);
+
+  if (!response.ok) {
+    throw new Error(`Request failed: ${response.status} ${response.statusText}`);
+  }
+
+  const payload = await response.json();
+  return normalizeCollectionResponse(payload);
+}

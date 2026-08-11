@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
-import { fetchCollection, getCollectionUrl } from '../lib/api';
+import { fetchFromEndpoint, getCollectionUrl } from '../lib/api';
+
+const leaderboardEndpoint = import.meta.env.VITE_CODESPACE_NAME
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/leaderboard/`
+  : getCollectionUrl('leaderboard');
 
 function Leaderboard() {
   const [state, setState] = useState({
@@ -13,7 +17,7 @@ function Leaderboard() {
   useEffect(() => {
     let active = true;
 
-    fetchCollection('leaderboard')
+    fetchFromEndpoint(leaderboardEndpoint)
       .then((result) => {
         if (!active) {
           return;
@@ -41,7 +45,7 @@ function Leaderboard() {
   return (
     <section>
       <h2>Leaderboard</h2>
-      <p className="text-secondary">Endpoint: {getCollectionUrl('leaderboard')}</p>
+      <p className="text-secondary">Endpoint: {leaderboardEndpoint}</p>
       {state.loading && <p>Loading leaderboard...</p>}
       {state.error && <p className="text-danger">{state.error}</p>}
       {!state.loading && !state.error && (

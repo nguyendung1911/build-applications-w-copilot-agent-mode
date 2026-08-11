@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
-import { fetchCollection, getCollectionUrl } from '../lib/api';
+import { fetchFromEndpoint, getCollectionUrl } from '../lib/api';
+
+const usersEndpoint = import.meta.env.VITE_CODESPACE_NAME
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/users/`
+  : getCollectionUrl('users');
 
 function Users() {
   const [state, setState] = useState({
@@ -13,7 +17,7 @@ function Users() {
   useEffect(() => {
     let active = true;
 
-    fetchCollection('users')
+    fetchFromEndpoint(usersEndpoint)
       .then((result) => {
         if (!active) {
           return;
@@ -41,7 +45,7 @@ function Users() {
   return (
     <section>
       <h2>Users</h2>
-      <p className="text-secondary">Endpoint: {getCollectionUrl('users')}</p>
+      <p className="text-secondary">Endpoint: {usersEndpoint}</p>
       {state.loading && <p>Loading users...</p>}
       {state.error && <p className="text-danger">{state.error}</p>}
       {!state.loading && !state.error && (
